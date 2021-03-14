@@ -9,6 +9,8 @@
 
 Φάση 5: ημ/νία εξέτασης μαθήματος ή τέλος εξαμήνου (5 βαθμοί) 
 
+# Document Types
+
 doc-text - The documents in text form
 
 query-text - The queries in text form
