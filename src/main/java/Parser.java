@@ -2,11 +2,8 @@ import model.MyDoc;
 import utils.Validators;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
-import java.util.Scanner;
 import java.util.List;
 
 public class Parser {
@@ -22,8 +19,18 @@ public class Parser {
 
     }
 
+    /**
+     * Calls methods that parse and test the dataset
+     * Exits if problems were found in the dataset
+     * @return the list of documents parsed
+     */
     public List<MyDoc> parse(){
         addDocsToList();
+
+        if (!runChecks(myDocuments)){
+            System.exit(4);
+        }
+
         return myDocuments;
     }
 
@@ -65,6 +72,37 @@ public class Parser {
     }
 
     /**
+     * Checks the ids and the contents of each document
+     * @param documents the list of documents to be checked
+     * @return true if all tests passed
+     */
+    private boolean runChecks(List<MyDoc> documents){
+        int flag = 0;
+
+        if (!listIdsArePresent(documents)){
+            flag++;
+        }
+        if (!noContentsWarn(documents)){
+            flag = flag + 2;
+        }
+
+        switch (flag) {
+            case 1:
+                System.out.println("ERROR: Found miss-matching ids on one or more documents. Closing...");
+                return false;
+            case 2:
+                System.out.println("WARNING: Found documents with empty contents");
+                return true;
+            case 3:
+                System.out.println("WARNING: Found documents with empty contents");
+                System.out.println("ERROR: Found miss-matching ids on one or more documents. Closing...");
+                return false;
+            default:
+                return true;
+        }
+    }
+
+    /**
      * Checks the validity of the ids
      * @param documents the list to be tested
      * @return  true if ids represent the corpus correctly
@@ -78,6 +116,23 @@ public class Parser {
                 flag++;
             }
         }
+        return flag == 0;
+    }
+
+    /**
+     * Checks if any document is empty
+     * @param documents the list to be tested
+     * @return true if all documents have content
+     */
+    private boolean noContentsWarn(List<MyDoc> documents){
+        int flag = 0;
+        for (MyDoc doc : documents) {
+            if (doc.getContent().equals("")){
+                System.out.println("WARNING: Document with id: " + doc.getId() + " has no content.");
+                flag++;
+            }
+        }
+        if (flag > 0) System.out.println("WARNING: Found " + flag + "cases with missing content.");
         return flag == 0;
     }
 

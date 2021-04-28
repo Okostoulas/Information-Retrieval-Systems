@@ -12,20 +12,44 @@ import org.apache.lucene.search.similarities.Similarity;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 public class Indexer {
 
     List<MyDoc> myDocs;
+    public static final String index_directory = ".index";
 
     public Indexer(List<MyDoc> myDocs) {
         this.myDocs = myDocs;
     }
 
     public void index(){
-        for (MyDoc myDoc : myDocs) {
-            System.out.println(myDoc);
+
+        try {
+            Directory directory = FSDirectory.open(Paths.get(index_directory));
+
+            Analyzer analyzer = new EnglishAnalyzer();
+
+            Similarity similarity = new BM25Similarity();
+
+            IndexWriterConfig indexWriterConfig = new IndexWriterConfig(analyzer);
+            indexWriterConfig.setSimilarity(similarity);
+            indexWriterConfig.setOpenMode(IndexWriterConfig.OpenMode.CREATE);
+
+            IndexWriter indexWriter = new IndexWriter(directory, indexWriterConfig);
+
+            for (MyDoc myDoc : myDocs) {
+                indexDoc(indexWriter, myDoc);
+            }
+            // CLOSE YO index writers!
+            indexWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+
     }
 
 
