@@ -7,23 +7,23 @@ import org.apache.lucene.document.StoredField;
 import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
-import org.apache.lucene.search.similarities.BM25Similarity;
+import org.apache.lucene.search.similarities.ClassicSimilarity;
 import org.apache.lucene.search.similarities.Similarity;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 
 import java.io.IOException;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
 public class Indexer {
 
     List<MyDoc> myDocs;
-    public static final String index_directory = ".index";
+    public String index_directory;
 
-    public Indexer(List<MyDoc> myDocs) {
+    public Indexer(List<MyDoc> myDocs, String index_directory) {
         this.myDocs = myDocs;
+        this.index_directory = index_directory;
     }
 
     /**
@@ -36,7 +36,7 @@ public class Indexer {
 
             Analyzer analyzer = new EnglishAnalyzer();
 
-            Similarity similarity = new BM25Similarity();
+            Similarity similarity = new ClassicSimilarity();
 
             IndexWriterConfig indexWriterConfig = new IndexWriterConfig(analyzer);
             indexWriterConfig.setSimilarity(similarity);

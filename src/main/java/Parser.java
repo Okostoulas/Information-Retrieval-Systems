@@ -17,11 +17,11 @@ public class Parser {
         List<MyDoc> documents;
         documents = addDataToList(filename, delimiter);
 
-        if (!runChecks(myDocuments)){
+        if (!runChecks(documents)){
             System.exit(4);
         }
 
-        return myDocuments;
+        return documents;
     }
 
     /**
@@ -30,7 +30,7 @@ public class Parser {
      */
     private static List<MyDoc> addDataToList(String filename, String delimiter) {
         try {
-            BufferedReader reader = new BufferedReader(new FileReader(file_name));
+            BufferedReader reader = new BufferedReader(new FileReader(filename));
             String line_read;
             List<MyDoc> list = new ArrayList<>();
 
@@ -62,6 +62,7 @@ public class Parser {
             return list;
         } catch (Exception e) {
             e.printStackTrace();
+            return null;
         }
     }
 
@@ -70,7 +71,7 @@ public class Parser {
      * @param documents the list of documents to be checked
      * @return true if all tests passed
      */
-    private boolean runChecks(List<MyDoc> documents){
+    private static boolean runChecks(List<MyDoc> documents){
         int flag = 0;
 
         if (!listIdsArePresent(documents)){
@@ -101,7 +102,7 @@ public class Parser {
      * @param documents the list to be tested
      * @return  true if ids represent the corpus correctly
      */
-    private boolean listIdsArePresent(List<MyDoc> documents){
+    private static boolean listIdsArePresent(List<MyDoc> documents){
         int flag = 0;
         for (int i = 0; i < (documents.size()); i++) {
             if (i + 1 != Integer.parseInt(documents.get(i).getId())){
@@ -118,7 +119,7 @@ public class Parser {
      * @param documents the list to be tested
      * @return true if all documents have content
      */
-    private boolean noContentsWarn(List<MyDoc> documents){
+    private static boolean noContentsWarn(List<MyDoc> documents){
         int flag = 0;
         for (MyDoc doc : documents) {
             if (doc.getContent().equals("")){
