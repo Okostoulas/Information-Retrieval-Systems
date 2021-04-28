@@ -26,6 +26,9 @@ public class Indexer {
         this.myDocs = myDocs;
     }
 
+    /**
+     *  Indexes a document list with an English Analyzer and BM25 similarity function
+     */
     public void index(){
 
         try {
@@ -52,7 +55,6 @@ public class Indexer {
 
     }
 
-
     /**
      * Creates a document and adds it in the index
      * @param indexWriter the index writer used
@@ -63,13 +65,12 @@ public class Indexer {
         try {
             Document doc = new Document();
 
-            TextField id = new TextField("id", myDoc.getId(), Field.Store.NO);
+            TextField id = new TextField("id", myDoc.getId(), Field.Store.YES);
             doc.add(id);
-            StoredField content = new StoredField("content", myDoc.getContent());
+            TextField content = new TextField("content", myDoc.getContent(), Field.Store.NO);
             doc.add(content);
 
             if (indexWriter.getConfig().getOpenMode() == IndexWriterConfig.OpenMode.CREATE) {
-                System.out.println("Adding document with id: " + myDoc.getId());
                 indexWriter.addDocument(doc);
             }
         } catch (Exception e) {

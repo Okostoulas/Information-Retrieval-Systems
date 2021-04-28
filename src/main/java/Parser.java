@@ -8,24 +8,14 @@ import java.util.List;
 
 public class Parser {
 
-    private final String file_name;
-    private final String delimiter;
-    private final List<MyDoc> myDocuments;
-
-    public Parser(String filename, String delimiter) {
-        this.file_name = filename;
-        this.delimiter = delimiter;
-        this.myDocuments = new ArrayList<>();
-
-    }
-
     /**
      * Calls methods that parse and test the dataset
      * Exits if problems were found in the dataset
      * @return the list of documents parsed
      */
-    public List<MyDoc> parse(){
-        addDocsToList();
+    public static List<MyDoc> parse(String filename, String delimiter){
+        List<MyDoc> documents;
+        documents = addDataToList(filename, delimiter);
 
         if (!runChecks(myDocuments)){
             System.exit(4);
@@ -34,10 +24,15 @@ public class Parser {
         return myDocuments;
     }
 
-    private void addDocsToList() {
+    /**
+     * Reads data from dataset and arranges it into MyDoc objects
+     * Then adds all the data into the myDocuments list
+     */
+    private static List<MyDoc> addDataToList(String filename, String delimiter) {
         try {
             BufferedReader reader = new BufferedReader(new FileReader(file_name));
             String line_read;
+            List<MyDoc> list = new ArrayList<>();
 
             while ((line_read = reader.readLine()) != null) {
 
@@ -57,15 +52,14 @@ public class Parser {
 
                     // trim for extra spaces
                     text = text.trim().replaceAll(" +", " ");
-                    MyDoc doc = new MyDoc(id, text);
 
-                    // add document to list of documents
-                    myDocuments.add(doc);
+                    MyDoc doc = new MyDoc(id, text);
+                    list.add(doc);
                 }
             }
             // CLOSE YO FILES !!!
             reader.close();
-
+            return list;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -135,5 +129,6 @@ public class Parser {
         if (flag > 0) System.out.println("WARNING: Found " + flag + "cases with missing content.");
         return flag == 0;
     }
+
 
 }
