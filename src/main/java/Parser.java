@@ -27,7 +27,7 @@ public class Parser {
         return myDocuments;
     }
 
-    private void ReadFileToString() {
+    private void addDocsToList() {
         try {
             BufferedReader reader = new BufferedReader(new FileReader(file_name));
             String line_read;
@@ -62,6 +62,17 @@ public class Parser {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private boolean listIdsArePresent(List<MyDoc> documents){
+        for (int i=0; i < (documents.size()); i++) {
+            if (i != Integer.parseInt(documents.get(i).getId())){
+                System.out.println("Searched for id: " + i);
+                System.out.println("Found id: " + documents.get(i).getId());
+                return false;
+            }
+        }
+        return true;
     }
 
 }
