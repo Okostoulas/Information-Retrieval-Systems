@@ -8,18 +8,15 @@ public class Main {
 
         String delimiter = "/";
         String dataset = "Dataset/doc-text";
-
+        List<MyDoc> myDocs;
+        
         // Data processing
         Parser parser = new Parser(dataset, delimiter);
+        myDocs = parser.parse();
 
-        List<MyDoc> temp;
-        try {
-            temp = parser.parse();
-            System.out.println(temp);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
         // Indexing
+        Indexer indexer = new Indexer(myDocs);
+        indexer.index();
 
     }
 }

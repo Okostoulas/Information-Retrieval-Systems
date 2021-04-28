@@ -11,9 +11,9 @@ import java.util.List;
 
 public class Parser {
 
-    private String file_name;
-    private String delimiter;
-    private List<MyDoc> myDocuments;
+    private final String file_name;
+    private final String delimiter;
+    private final List<MyDoc> myDocuments;
 
     public Parser(String filename, String delimiter) {
         this.file_name = filename;
@@ -23,7 +23,7 @@ public class Parser {
     }
 
     public List<MyDoc> parse(){
-        ReadFileToString();
+        addDocsToList();
         return myDocuments;
     }
 
@@ -52,10 +52,10 @@ public class Parser {
                     text = text.trim().replaceAll(" +", " ");
                     MyDoc doc = new MyDoc(id, text);
 
+                    // add document to list of documents
                     myDocuments.add(doc);
                 }
             }
-
             // CLOSE YO FILES !!!
             reader.close();
 
