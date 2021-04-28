@@ -64,15 +64,21 @@ public class Parser {
         }
     }
 
+    /**
+     * Checks the validity of the ids
+     * @param documents the list to be tested
+     * @return  true if ids represent the corpus correctly
+     */
     private boolean listIdsArePresent(List<MyDoc> documents){
-        for (int i=0; i < (documents.size()); i++) {
-            if (i != Integer.parseInt(documents.get(i).getId())){
+        int flag = 0;
+        for (int i = 0; i < (documents.size()); i++) {
+            if (i + 1 != Integer.parseInt(documents.get(i).getId())){
                 System.out.println("Searched for id: " + i);
                 System.out.println("Found id: " + documents.get(i).getId());
-                return false;
+                flag++;
             }
         }
-        return true;
+        return flag == 0;
     }
 
 }
