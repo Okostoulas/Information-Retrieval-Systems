@@ -1,8 +1,7 @@
 import model.MyDoc;
 import utils.Validators;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -131,5 +130,25 @@ public class Parser {
         return flag == 0;
     }
 
+
+    public static void saveRelevanceAssessment(List<MyDoc> relevance_assessments){
+        try {
+            File file = new File("qrels.txt");
+            FileWriter fileWriter = new FileWriter(file);
+            for (MyDoc doc : relevance_assessments){
+                String[] doc_ids = doc.getContent().split(" ");
+
+                for (String doc_id : doc_ids){
+                    fileWriter.write("Q" + doc.getId() + " " + doc_id + " 1\n");
+                }
+
+            }
+
+            fileWriter.close();
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+
+    }
 
 }

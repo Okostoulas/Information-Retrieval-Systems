@@ -32,7 +32,7 @@ public class Searcher {
 
             QueryParser queryParser = new QueryParser(field, analyzer);
 
-            File file = new File("first_" + k + "_results");
+            File file = new File("first_" + k + "_results.txt");
             FileWriter fileWriter = new FileWriter(file);
 
             for (MyDoc doc_query : queries) {
