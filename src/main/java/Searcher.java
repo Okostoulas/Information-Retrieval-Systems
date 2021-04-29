@@ -44,7 +44,7 @@ public class Searcher {
                 // Save results
                 for (ScoreDoc hit : hits) {
                     Document hitDoc = indexSearcher.doc(hit.doc);
-                    fileWriter.write(doc_query.getId() + " 0 " + hitDoc.get("id") + " 0 " + hit.score + " myMethod\n");
+                    fileWriter.write(doc_query.getId() + " 0 " + hitDoc.get("id") + " 0 " + hit.score + " VEC_SPACE\n");
                 }
             }
 
