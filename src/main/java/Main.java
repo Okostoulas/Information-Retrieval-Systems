@@ -25,13 +25,13 @@ public class Main {
         Parser.saveRelevanceAssessment(relevance_assessments);
 
         // Indexing
-//        Indexer indexer = new Indexer(documents, index_directory);
-//        indexer.index();
-//
-//        // Searching
-//        for (int k : k_results){
-//            Searcher.executeQueries(index_directory, query_field, queries, k);
-//        }
+        Indexer indexer = new Indexer(documents, index_directory);
+        indexer.index();
+
+        // Searching
+        for (int k : k_results){
+            Searcher.executeQueries(index_directory, query_field, queries, k);
+        }
 
 
     }

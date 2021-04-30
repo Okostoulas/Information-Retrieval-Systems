@@ -139,7 +139,7 @@ public class Parser {
                 String[] doc_ids = doc.getContent().split(" ");
 
                 for (String doc_id : doc_ids){
-                    fileWriter.write("Q" + doc.getId() + " " + doc_id + " 1\n");
+                    fileWriter.write(doc.getId() + "\t0\t" + doc_id + "\t1\n");
                 }
 
             }
