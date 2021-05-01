@@ -24,6 +24,8 @@ public class Searcher {
     public static void executeQueries(String index_directory, String field, List<MyDoc> queries, int k){
 
         try {
+            long start_time = System.nanoTime();
+
             IndexReader indexReader = DirectoryReader.open(FSDirectory.open(Paths.get(index_directory)));
             IndexSearcher indexSearcher = new IndexSearcher(indexReader);
             indexSearcher.setSimilarity(new ClassicSimilarity());
@@ -38,6 +40,7 @@ public class Searcher {
             for (MyDoc doc_query : queries) {
                 Query query = queryParser.parse(doc_query.getContent());
 
+                // Get top k results
                 TopDocs results = indexSearcher.search(query, k);
                 ScoreDoc[] hits = results.scoreDocs;
 
@@ -51,6 +54,12 @@ public class Searcher {
             // CLOSE YO READERS AND YO FILES
             indexReader.close();
             fileWriter.close();
+
+            // Time elapsed calculation
+            long end_time = System.nanoTime();
+            long time_elapsed = end_time - start_time;
+            double time_elapsed_converted = (double) time_elapsed / 1_000_000_000.0;
+            System.out.println("Time to search queries: " + time_elapsed_converted + " seconds and return the top : " + k + " documents");
         } catch (IOException | ParseException e) {
             e.printStackTrace();
         }

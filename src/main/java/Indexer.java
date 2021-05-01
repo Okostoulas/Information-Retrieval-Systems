@@ -15,6 +15,7 @@ import org.apache.lucene.store.FSDirectory;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class Indexer {
 
@@ -32,6 +33,8 @@ public class Indexer {
     public void index(){
 
         try {
+            long start_time = System.nanoTime();
+
             Directory directory = FSDirectory.open(Paths.get(index_directory));
 
             Analyzer analyzer = new EnglishAnalyzer();
@@ -49,6 +52,12 @@ public class Indexer {
             }
             // CLOSE YO index writers!
             indexWriter.close();
+
+            // Time elapsed calculation
+            long end_time = System.nanoTime();
+            long time_elapsed = end_time - start_time;
+            double time_elapsed_converted = (double) time_elapsed / 1_000_000_000.0;
+            System.out.println("Time to create index: " + time_elapsed_converted + " seconds");
         } catch (IOException e) {
             e.printStackTrace();
         }
