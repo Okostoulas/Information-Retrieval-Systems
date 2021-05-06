@@ -1,4 +1,5 @@
 import model.MyDoc;
+
 import java.util.List;
 
 public class Main {
@@ -11,7 +12,7 @@ public class Main {
         String relevance_assessments_file = "Dataset/rlv-ass";
         String index_directory = "./index";
         String query_field = "content";
-        String q_results_file = "qrels.txt";
+        String q_results_file = "Results/qrels.txt";
         int[] k_results = {5, 10, 15, 20, 30, 50};
         List<MyDoc> documents;
         List<MyDoc> queries;
