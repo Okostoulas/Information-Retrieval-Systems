@@ -18,7 +18,7 @@ import java.util.List;
 public class Indexer {
 
     /**
-     *  Indexes a document list with an English Analyzer and BM25 similarity function
+     *  Indexes a document list with an English Analyzer and Classic similarity function
      * @param index_directory the directory on which the indexer should dump the indexed
      *                        corpus
      * @param myDocs the list of un-indexed documents
