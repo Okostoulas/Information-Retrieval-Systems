@@ -6,6 +6,7 @@ public class Main {
 
     public static void main(String[] args) {
 
+        /* INITIAL SETUP */
         String delimiter = "/";
         String dataset_file = "Dataset/doc-text";
         String queries_file = "Dataset/query-text";
@@ -17,6 +18,7 @@ public class Main {
         List<MyDoc> documents;
         List<MyDoc> queries;
         List<MyDoc> relevance_assessments;
+        /* END OF INITIAL SETUP */
 
         // Data parsing
         documents = Parser.parse(dataset_file, delimiter);
@@ -26,7 +28,7 @@ public class Main {
         Parser.saveRelevanceAssessment(relevance_assessments, q_results_file);
 
         // Indexing
-        Indexer.index(index_directory, documents);
+        Indexer.index(index_directory, documents, query_field);
 
         // Searching
         for (int k : k_results){

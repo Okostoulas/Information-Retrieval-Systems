@@ -19,8 +19,12 @@ public class Indexer {
 
     /**
      *  Indexes a document list with an English Analyzer and BM25 similarity function
+     * @param index_directory the directory on which the indexer should dump the indexed
+     *                        corpus
+     * @param myDocs the list of un-indexed documents
+     * @param textField [REDUNDANT] the name of the text field used for categorization
      */
-    public static void index(String index_directory, List<MyDoc> myDocs){
+    public static void index(String index_directory, List<MyDoc> myDocs, String textField){
 
         try {
             long start_time = System.nanoTime();
@@ -38,7 +42,7 @@ public class Indexer {
             IndexWriter indexWriter = new IndexWriter(directory, indexWriterConfig);
 
             for (MyDoc myDoc : myDocs) {
-                indexDoc(indexWriter, myDoc);
+                indexDoc(indexWriter, myDoc, textField);
             }
             // CLOSE YO index writers!
             indexWriter.close();
@@ -58,15 +62,16 @@ public class Indexer {
      * Creates a document and adds it in the index
      * @param indexWriter the index writer used
      * @param myDoc the document that gets added to the index
+     * @param textField specifies which text field to name and use
      */
-    private static void indexDoc(IndexWriter indexWriter, MyDoc myDoc){
+    private static void indexDoc(IndexWriter indexWriter, MyDoc myDoc, String textField){
 
         try {
             Document doc = new Document();
 
             TextField id = new TextField("id", myDoc.getId(), Field.Store.YES);
             doc.add(id);
-            TextField content = new TextField("content", myDoc.getContent(), Field.Store.NO);
+            TextField content = new TextField(textField, myDoc.getContent(), Field.Store.NO);
             doc.add(content);
 
             if (indexWriter.getConfig().getOpenMode() == IndexWriterConfig.OpenMode.CREATE) {

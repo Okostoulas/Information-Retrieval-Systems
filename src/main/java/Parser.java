@@ -10,6 +10,8 @@ public class Parser {
     /**
      * Calls methods that parse and test the dataset
      * Exits if problems were found in the dataset
+     * @param filename the location of the file
+     * @param delimiter the basic delimiter used
      * @return the list of documents parsed
      */
     public static List<MyDoc> parse(String filename, String delimiter){
@@ -26,6 +28,8 @@ public class Parser {
     /**
      * Reads data from dataset and arranges it into MyDoc objects
      * Then adds all the data into the myDocuments list
+     * @param filename the location of the file
+     * @param delimiter the basic delimiter used
      */
     private static List<MyDoc> addDataToList(String filename, String delimiter) {
         try {

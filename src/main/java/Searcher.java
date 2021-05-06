@@ -21,6 +21,14 @@ import java.util.List;
 
 public class Searcher {
 
+    /**
+     * Executes the list of queries given, assesses results per given number of first
+     * result, and saves the results to "Results/" dir
+     * @param index_directory the dir of the indexed corpus
+     * @param field the field on which the searcher will search
+     * @param queries the list of queries
+     * @param k the number of first results
+     */
     public static void executeQueries(String index_directory, String field, List<MyDoc> queries, int k){
 
         try {
