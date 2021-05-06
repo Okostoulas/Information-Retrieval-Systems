@@ -4,6 +4,7 @@ import utils.Validators;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class Parser {
 
@@ -54,7 +55,7 @@ public class Parser {
                     }
 
                     // trim for extra spaces
-                    text = text.trim().replaceAll(" +", " ");
+                    text = text.trim().replaceAll(" +", " ").toLowerCase(Locale.ROOT);
 
                     MyDoc doc = new MyDoc(id, text);
                     list.add(doc);
