@@ -7,10 +7,12 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="Information-Retrieval-systems" />
+        <module name="Information-Retrieval-systems-exercise-1" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="Information-Retrieval-systems" target="7" />
+      <module name="Information-Retrieval-systems-exercise-1" target="7" />
       <module name="IR-Systems" target="7" />
     </bytecodeTargetLevel>
   </component>

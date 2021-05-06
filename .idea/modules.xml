@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/Information-Retrieval-systems.iml" filepath="$PROJECT_DIR$/.idea/Information-Retrieval-systems.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Information-Retrieval-systems-exercise-1.iml" filepath="$PROJECT_DIR$/Information-Retrieval-systems-exercise-1.iml" />
     </modules>
   </component>
 </project>
