@@ -25,8 +25,7 @@ public class Main {
         Parser.saveRelevanceAssessment(relevance_assessments, q_results_file);
 
         // Indexing
-        Indexer indexer = new Indexer(documents, index_directory);
-        indexer.index();
+        Indexer.index(index_directory, documents);
 
         // Searching
         for (int k : k_results){

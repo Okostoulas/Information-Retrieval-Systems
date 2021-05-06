@@ -17,18 +17,10 @@ import java.util.List;
 
 public class Indexer {
 
-    List<MyDoc> myDocs;
-    public String index_directory;
-
-    public Indexer(List<MyDoc> myDocs, String index_directory) {
-        this.myDocs = myDocs;
-        this.index_directory = index_directory;
-    }
-
     /**
      *  Indexes a document list with an English Analyzer and BM25 similarity function
      */
-    public void index(){
+    public static void index(String index_directory, List<MyDoc> myDocs){
 
         try {
             long start_time = System.nanoTime();
@@ -67,7 +59,7 @@ public class Indexer {
      * @param indexWriter the index writer used
      * @param myDoc the document that gets added to the index
      */
-    private void indexDoc(IndexWriter indexWriter, MyDoc myDoc){
+    private static void indexDoc(IndexWriter indexWriter, MyDoc myDoc){
 
         try {
             Document doc = new Document();
