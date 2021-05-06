@@ -11,6 +11,7 @@ public class Main {
         String relevance_assessments_file = "Dataset/rlv-ass";
         String index_directory = "./index";
         String query_field = "content";
+        String q_results_file = "qrels.txt";
         int[] k_results = {5, 10, 15, 20, 30, 50};
         List<MyDoc> documents;
         List<MyDoc> queries;
@@ -21,7 +22,7 @@ public class Main {
         queries = Parser.parse(queries_file, delimiter);
         relevance_assessments = Parser.parse(relevance_assessments_file, delimiter);
 
-        Parser.saveRelevanceAssessment(relevance_assessments);
+        Parser.saveRelevanceAssessment(relevance_assessments, q_results_file);
 
         // Indexing
         Indexer indexer = new Indexer(documents, index_directory);

@@ -134,10 +134,11 @@ public class Parser {
     /**
      * Converts the relevance assessment file contents into a format that can be recognised by trec_eval
      * @param relevance_assessments the contents of the relevance assessment file
+     * @param filename the name of the file to read
      */
-    public static void saveRelevanceAssessment(List<MyDoc> relevance_assessments){
+    public static void saveRelevanceAssessment(List<MyDoc> relevance_assessments, String filename){
         try {
-            File file = new File("qrels.txt");
+            File file = new File(filename);
             FileWriter fileWriter = new FileWriter(file);
             for (MyDoc doc : relevance_assessments){
                 String[] doc_ids = doc.getContent().split(" ");
