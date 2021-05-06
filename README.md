@@ -16,7 +16,7 @@ term-vecs - A file of numbers, don't know what they do
 term-vocab - Another file of numbers
 
 # Ημερομηνίες Υποβολής Φάσεων Εργασίας
-Φάση 1: 6 Μαΐου 2021 (10 βαθμοί)
+Φάση 1: 10 Μαΐου 2021 (10 βαθμοί)
 
 Φάση 2: 24 Μαΐου 2020 (10 βαθμοί) 
 
