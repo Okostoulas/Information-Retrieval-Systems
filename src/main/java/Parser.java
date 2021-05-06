@@ -158,4 +158,15 @@ public class Parser {
         }
     }
 
+    /**
+     * Checks if results directory exist and creates it if absent
+     * @param results_directory_name the name of the results directory
+     */
+    public static void createResultsFile(String results_directory_name){
+        File results_file_directory = new File(results_directory_name);
+        if (!results_file_directory.isDirectory()){
+            System.out.println("Creating results directory..");
+            results_file_directory.mkdir();
+        }
+    }
 }
