@@ -5,6 +5,8 @@
     <output-test url="file://$MODULE_DIR$/target/test-classes" />
     <content url="file://$MODULE_DIR$">
       <sourceFolder url="file://$MODULE_DIR$/src/main/java" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/main/resources" type="java-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/src/test/java" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>
     <orderEntry type="inheritedJdk" />
@@ -14,5 +16,7 @@
     <orderEntry type="library" name="Maven: org.apache.lucene:lucene-queryparser:7.7.3" level="project" />
     <orderEntry type="library" name="Maven: org.apache.lucene:lucene-sandbox:7.7.3" level="project" />
     <orderEntry type="library" name="Maven: org.apache.lucene:lucene-queries:7.7.3" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.lucene:lucene-classification:7.7.3" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.lucene:lucene-grouping:7.7.3" level="project" />
   </component>
 </module>

@@ -50,7 +50,15 @@
             <version>7.7.3</version>
         </dependency>
 
-   </dependencies>
+        <!-- https://mvnrepository.com/artifact/org.apache.lucene/lucene-classification -->
+        <dependency>
+            <groupId>org.apache.lucene</groupId>
+            <artifactId>lucene-classification</artifactId>
+            <version>7.7.3</version>
+        </dependency>
+
+
+    </dependencies>
 
 
 
