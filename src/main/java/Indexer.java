@@ -16,11 +16,18 @@ import org.apache.lucene.search.similarities.ClassicSimilarity;
 import org.apache.lucene.search.similarities.Similarity;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
+import org.apache.lucene.search.IndexSearcher;
+
 
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.List;
+import com.opencsv.CSVWriter;
+
+import org.apache.lucene.index.IndexOptions;
+import org.apache.lucene.classification.utils.DocToDoubleVectorUtils;
+
 
 public class Indexer {
 
@@ -51,7 +58,7 @@ public class Indexer {
             IndexWriter indexWriter = new IndexWriter(directory, indexWriterConfig);
 
             for (MyDoc myDoc : myDocs) {
-                indexDoc(indexWriter, myDoc, textField);
+                indexDoc(indexWriter, myDoc, textField, type);
             }
             // CLOSE YO index writers!
             indexWriter.close();
@@ -87,14 +94,14 @@ public class Indexer {
      * @param myDoc the document that gets added to the index
      * @param textField specifies which text field to name and use
      */
-    private static void indexDoc(IndexWriter indexWriter, MyDoc myDoc, String textField){
+    static void indexDoc(IndexWriter indexWriter, MyDoc myDoc, String textField, FieldType type){
 
         try {
             Document doc = new Document();
 
             TextField id = new TextField("id", myDoc.getId(), Field.Store.YES);
             doc.add(id);
-            TextField content = new TextField(textField, myDoc.getContent(), Field.Store.NO);
+            Field content = new Field(textField, myDoc.getContent(), type);
             doc.add(content);
 
             if (indexWriter.getConfig().getOpenMode() == IndexWriterConfig.OpenMode.CREATE) {

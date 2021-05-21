@@ -1,5 +1,9 @@
 import model.MyDoc;
+import org.apache.lucene.index.DirectoryReader;
+import org.apache.lucene.index.IndexReader;
+import org.apache.lucene.store.FSDirectory;
 
+import java.nio.file.Paths;
 import java.util.List;
 
 public class Main {
@@ -34,6 +38,22 @@ public class Main {
         // Indexing
         System.out.println("Indexing dataset");
         Indexer.index(index_directory, documents, query_field);
+
+        // Reading the Index
+        try {
+            IndexReader indexReader = DirectoryReader.open(FSDirectory.open(Paths.get(index_directory)));
+            // print Vector Index
+            Indexer.printIndex(indexReader);
+
+            Double[][] vector = Indexer.getSparseVecArray(indexReader);
+
+            //Write vector index to csv
+            Indexer.writeSparseVecArrayToCSV(vector);
+
+            //Indexer.printSVD(d);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         // Searching
         /*
