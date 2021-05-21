@@ -1,4 +1,4 @@
-//tested for lucene 7.7.3 and jdk13
+import org.apache.lucene.analysis.en.EnglishAnalyzer;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.RAMDirectory;
 import org.apache.lucene.index.IndexReader;
@@ -7,11 +7,9 @@ import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.index.MultiFields;
 import org.apache.lucene.index.Terms;
 import org.apache.lucene.index.TermsEnum;
-import org.apache.lucene.analysis.en.EnglishAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.FieldType;
-import org.apache.lucene.document.TextField;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.MatchAllDocsQuery;
@@ -80,13 +78,14 @@ public class CreateTermDocMatrix {
 	private static void testSparseFreqDoubleArrayConversion(IndexReader reader) throws Exception {
 		Terms fieldTerms = MultiFields.getTerms(reader, "title");   //the number of terms in the lexicon after analysis of the Field "title"
 		System.out.println("Terms:" + fieldTerms.size());
-		
+
 		TermsEnum it = fieldTerms.iterator();						//iterates through the terms of the lexicon
 		while(it.next() != null) {
 			System.out.print(it.term().utf8ToString() + " "); 		//prints the terms
 		}
 		System.out.println();
 		System.out.println();
+
 		if (fieldTerms != null && fieldTerms.size() != -1) {
 			IndexSearcher indexSearcher = new IndexSearcher(reader);
 			for (ScoreDoc scoreDoc : indexSearcher.search(new MatchAllDocsQuery(), Integer.MAX_VALUE).scoreDocs) {   //retrieves all documents

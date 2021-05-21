@@ -1,19 +1,24 @@
+import cern.colt.matrix.DoubleMatrix1D;
+import cern.colt.matrix.DoubleMatrix2D;
+import cern.colt.matrix.impl.SparseDoubleMatrix2D;
+import cern.colt.matrix.linalg.SingularValueDecomposition;
 import model.MyDoc;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.en.EnglishAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
+import org.apache.lucene.document.FieldType;
 import org.apache.lucene.document.TextField;
-import org.apache.lucene.index.IndexWriter;
-import org.apache.lucene.index.IndexWriterConfig;
+import org.apache.lucene.index.*;
+import org.apache.lucene.search.MatchAllDocsQuery;
+import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.similarities.ClassicSimilarity;
 import org.apache.lucene.search.similarities.Similarity;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 
-import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 
@@ -36,6 +41,8 @@ public class Indexer {
             Analyzer analyzer = new EnglishAnalyzer();
 
             Similarity similarity = new ClassicSimilarity();
+
+            FieldType type = createFieldType();
 
             IndexWriterConfig indexWriterConfig = new IndexWriterConfig(analyzer);
             indexWriterConfig.setSimilarity(similarity);
@@ -61,6 +68,20 @@ public class Indexer {
     }
 
     /**
+     * Creates a Field type so it can be used for the index
+     * @return the field type
+     */
+    private static FieldType createFieldType(){
+        FieldType type = new FieldType();
+        type.setIndexOptions(IndexOptions.DOCS_AND_FREQS);
+        type.setTokenized(true);
+        type.setStored(true);
+        type.setStoreTermVectors(true);
+
+        return type;
+    }
+
+    /**
      * Creates a document and adds it in the index
      * @param indexWriter the index writer used
      * @param myDoc the document that gets added to the index
@@ -82,6 +103,68 @@ public class Indexer {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public static void printIndex(IndexReader reader) throws Exception{
+        Terms terms = MultiFields.getTerms(reader, "content");
+
+        TermsEnum it = terms.iterator();
+        //iterates through the terms of the lexicon
+        while(it.next() != null) {
+            System.out.println(it.term().utf8ToString()); 		//prints the terms
+        }
+
+    }
+
+    public static Double[][] getSparseVecArray(IndexReader reader) throws Exception{
+        Double[][] vecTable = new Double[0][0];
+        Terms fieldTerms = MultiFields.getTerms(reader, "content");
+
+        if (fieldTerms != null && fieldTerms.size() != -1) {
+            IndexSearcher searcher = new IndexSearcher(reader);
+
+            ScoreDoc[] scoreDocs = searcher.search(new MatchAllDocsQuery(), Integer.MAX_VALUE).scoreDocs;
+            vecTable = new Double[(int) fieldTerms.size()][scoreDocs.length];
+
+            for (int j = 0; j < scoreDocs.length - 1; j++) {
+                Terms docTerms = reader.getTermVector(scoreDocs[j].doc, "content");
+
+                Double[] vector = DocToDoubleVectorUtils.toSparseLocalFreqDoubleArray(docTerms, fieldTerms);
+                for (int i = 0; i < vector.length; i++) {
+                    vecTable[i][j] = vector[i];
+                }
+            }
+
+        }
+        return vecTable;
+    }
+
+    public static void writeSparseVecArrayToCSV(Double[][] vecTable) throws IOException {
+        try (CSVWriter writer = new CSVWriter(new FileWriter("data.csv"))) {
+            for (Double[] vec : vecTable){
+                int size = vec.length;
+                String[] str = new String[size];
+                for(int i=0; i<size - 1; i++) {
+                    str[i] = vec[i].toString();
+                }
+                writer.writeNext(str);
+            }
+        }
+    }
+
+
+    public static void printSVD(double[][] vecTable) {
+        DoubleMatrix2D vec = new SparseDoubleMatrix2D(vecTable);
+
+        SingularValueDecomposition s = new SingularValueDecomposition(vec);
+        DoubleMatrix2D U = s.getU();
+        DoubleMatrix2D S = s.getS();
+        DoubleMatrix2D V = s.getV();
+
+        System.out.println(U.toString());
+        System.out.println(S.toString());
+        System.out.println(V.toString());
+
     }
 
 }

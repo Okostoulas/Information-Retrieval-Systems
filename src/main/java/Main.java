@@ -36,10 +36,12 @@ public class Main {
         Indexer.index(index_directory, documents, query_field);
 
         // Searching
+        /*
         for (int k : k_results){
             System.out.println("Executing queries and getting top " + k + " documents");
             Searcher.executeQueries(index_directory, query_field, queries, k);
         }
+         */
 
 
     }
