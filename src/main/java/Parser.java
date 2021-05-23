@@ -1,3 +1,4 @@
+import com.opencsv.CSVReader;
 import model.MyDoc;
 import utils.Validators;
 
@@ -169,5 +170,42 @@ public class Parser {
             System.out.println("Creating results directory..");
             results_file_directory.mkdir();
         }
+    }
+
+    /**
+     * Reads the similarity vector csv line by line
+     * Adds each row's data to a List<MyDoc> and then adds it to the vectors List of Lists
+     * @param filename the similarity vector file name
+     * @return it's contents as a List<List<MyDoc>> object
+     */
+    public static List<List<MyDoc>> parseSimilarityVectorsCSV(String filename) {
+
+        List<List<MyDoc>> vectors = new ArrayList<>();
+
+        try {
+            // Create an object of filereader
+            // class with CSV file as a parameter.
+            FileReader filereader = new FileReader(filename);
+
+            // create csvReader object passing
+            // file reader as a parameter
+            CSVReader csvReader = new CSVReader(filereader);
+            String[] nextRecord;
+
+            // we are going to read data line by line
+            while ((nextRecord = csvReader.readNext()) != null) {
+                int i = 0;
+                List<MyDoc> docs = new ArrayList<>();
+                for (String cell : nextRecord) {
+                    docs.add(new MyDoc(Integer.toString(i), cell));
+                    i++;
+                }
+                vectors.add(docs);
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return vectors;
     }
 }
