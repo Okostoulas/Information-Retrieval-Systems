@@ -31,12 +31,15 @@ public class Main {
         // Data parsing
         documents = Parser.parse(dataset_file, delimiter);
         queries = Parser.parse(queries_file, delimiter);
+
+        // [SVD] append queries to documents
+        documents.addAll(queries);
         relevance_assessments = Parser.parse(relevance_assessments_file, delimiter);
 
         Parser.saveRelevanceAssessment(relevance_assessments, q_results_file);
 
         // Indexing
-        System.out.println("Indexing dataset");
+        System.out.println("Indexing dataset and queries");
         Indexer.index(index_directory, documents, query_field);
 
         // Reading the Index
@@ -47,10 +50,17 @@ public class Main {
 
             Double[][] vector = Indexer.getSparseVecArray(indexReader);
 
-            //Write vector index to csv
+            // write vector index to csv
             Indexer.writeSparseVecArrayToCSV(vector);
 
-            //Indexer.printSVD(d);
+//            // print SVD from table
+//            double [][] primVec = new double[vector[0].length][vector.length];
+//            for (int i = 0; i < vector.length; i++) {
+//                for (int j = 0; j < vector[0].length; j++) {
+//                    primVec[j][i] = vector[i][j];
+//                }
+//            }
+//            Indexer.printSVD(primVec);
         } catch (Exception e) {
             e.printStackTrace();
         }
