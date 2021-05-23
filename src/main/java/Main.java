@@ -21,6 +21,9 @@ public class Main {
         List<MyDoc> documents;
         List<MyDoc> queries;
         List<MyDoc> relevance_assessments;
+
+        String similarity_vectors_file = "Results/q_k_similarity_vectors.csv";
+        List<List<MyDoc>> similarity_vectors;
         /* END OF INITIAL SETUP */
 
         // Create results directory
@@ -41,6 +44,7 @@ public class Main {
         Indexer.index(index_directory, documents, query_field);
 
         // Reading the Index
+        /*
         try {
             IndexReader indexReader = DirectoryReader.open(FSDirectory.open(Paths.get(index_directory)));
             // print Vector Index
@@ -51,26 +55,23 @@ public class Main {
             // write vector index to csv
             Indexer.writeSparseVecArrayToCSV(vector);
 
-//            // print SVD from table
-//            double [][] primVec = new double[vector[0].length][vector.length];
-//            for (int i = 0; i < vector.length; i++) {
-//                for (int j = 0; j < vector[0].length; j++) {
-//                    primVec[j][i] = vector[i][j];
-//                }
-//            }
-//            Indexer.printSVD(primVec);
         } catch (Exception e) {
             e.printStackTrace();
         }
+        */
+
+        // parse given CSV with qk similarity vectors
+        similarity_vectors = Parser.parseSimilarityVectorsCSV(similarity_vectors_file);
+        similarity_vectors = Searcher.sort_Similarity_Vectors(similarity_vectors);
 
         // Searching
-        /*
         for (int k : k_results){
             System.out.println("Executing queries and getting top " + k + " documents");
-            Searcher.executeQueries(index_directory, query_field, queries, k);
+            Searcher.executeQueries(index_directory, query_field, similarity_vectors, k);
         }
-         */
 
 
     }
+
+
 }
