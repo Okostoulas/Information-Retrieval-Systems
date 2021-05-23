@@ -133,7 +133,7 @@ public class Indexer {
             ScoreDoc[] scoreDocs = searcher.search(new MatchAllDocsQuery(), Integer.MAX_VALUE).scoreDocs;
             vecTable = new Double[(int) fieldTerms.size()][scoreDocs.length];
 
-            for (int j = 0; j < scoreDocs.length - 1; j++) {
+            for (int j = 0; j < scoreDocs.length; j++) {
                 Terms docTerms = reader.getTermVector(scoreDocs[j].doc, "content");
 
                 Double[] vector = DocToDoubleVectorUtils.toSparseLocalFreqDoubleArray(docTerms, fieldTerms);
@@ -148,10 +148,13 @@ public class Indexer {
 
     public static void writeSparseVecArrayToCSV(Double[][] vecTable) throws IOException {
         try (CSVWriter writer = new CSVWriter(new FileWriter("data.csv"))) {
+            int count = 1;
             for (Double[] vec : vecTable){
+                System.out.println(count);
+                count++;
                 int size = vec.length;
                 String[] str = new String[size];
-                for(int i=0; i<size - 1; i++) {
+                for(int i=0; i < size; i++) {
                     str[i] = vec[i].toString();
                 }
                 writer.writeNext(str);
