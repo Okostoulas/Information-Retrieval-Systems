@@ -1,7 +1,5 @@
 import model.MyDoc;
 
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 public class Main {
@@ -35,8 +33,8 @@ public class Main {
 
         // [SVD] append queries to documents
         documents.addAll(queries);
+        // [SVD] data parsing
         relevance_assessments = Parser.parse(relevance_assessments_file, delimiter);
-
         Parser.saveRelevanceAssessment(relevance_assessments, q_results_file);
 
         // Indexing
@@ -62,6 +60,7 @@ public class Main {
 
         // parse given CSV with qk similarity vectors
         similarity_vectors = Parser.parseSimilarityVectorsCSV(similarity_vectors_file);
+        // Sort similarity vectors data in descending order
         similarity_vectors = Searcher.sort_Similarity_Vectors(similarity_vectors);
 
         // Searching

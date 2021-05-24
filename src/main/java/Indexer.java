@@ -1,7 +1,3 @@
-import cern.colt.matrix.DoubleMatrix1D;
-import cern.colt.matrix.DoubleMatrix2D;
-import cern.colt.matrix.impl.SparseDoubleMatrix2D;
-import cern.colt.matrix.linalg.SingularValueDecomposition;
 import model.MyDoc;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.en.EnglishAnalyzer;
@@ -112,7 +108,12 @@ public class Indexer {
         }
     }
 
-    public static void printIndex(IndexReader reader) throws Exception{
+    /**
+     * Prints the index
+     * @param reader the index reader for the index
+     * @throws Exception for the iterator
+     */
+    public static void printIndex(IndexReader reader) throws IOException {
         Terms terms = MultiFields.getTerms(reader, "content");
 
         TermsEnum it = terms.iterator();
@@ -123,6 +124,12 @@ public class Indexer {
 
     }
 
+    /**
+     *
+     * @param reader
+     * @return
+     * @throws Exception
+     */
     public static Double[][] getSparseVecArray(IndexReader reader) throws Exception{
         Double[][] vecTable = new Double[0][0];
         Terms fieldTerms = MultiFields.getTerms(reader, "content");
@@ -146,12 +153,14 @@ public class Indexer {
         return vecTable;
     }
 
+    /**
+     *
+     * @param vecTable
+     * @throws IOException
+     */
     public static void writeSparseVecArrayToCSV(Double[][] vecTable) throws IOException {
-        try (CSVWriter writer = new CSVWriter(new FileWriter("data.csv"))) {
-            int count = 1;
+        try (CSVWriter writer = new CSVWriter(new FileWriter("big_data.csv"))) {
             for (Double[] vec : vecTable){
-                System.out.println(count);
-                count++;
                 int size = vec.length;
                 String[] str = new String[size];
                 for(int i=0; i < size; i++) {
@@ -160,21 +169,6 @@ public class Indexer {
                 writer.writeNext(str);
             }
         }
-    }
-
-
-    public static void printSVD(double[][] vecTable) {
-        DoubleMatrix2D vec = new SparseDoubleMatrix2D(vecTable);
-
-        SingularValueDecomposition s = new SingularValueDecomposition(vec);
-        DoubleMatrix2D U = s.getU();
-        DoubleMatrix2D S = s.getS();
-        DoubleMatrix2D V = s.getV();
-
-        System.out.println(U.toString());
-        System.out.println(S.toString());
-        System.out.println(V.toString());
-
     }
 
 }
