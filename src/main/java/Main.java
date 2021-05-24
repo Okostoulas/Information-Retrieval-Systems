@@ -24,6 +24,9 @@ public class Main {
 
         String similarity_vectors_file = "Results/q_k_similarity_vectors_300.csv";
         List<List<MyDoc>> similarity_vectors;
+
+        String index_without_queries_filename = "Results/data.csv";
+        String index_with_queries_filename = "Results/data_with_queries.csv";
         /* END OF INITIAL SETUP */
 
         // mode selection
@@ -77,6 +80,5 @@ public class Main {
         }
 
     }
-
 
 }

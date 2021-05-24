@@ -129,10 +129,10 @@ public class Indexer {
     }
 
     /**
-     *
-     * @param reader
-     * @return
-     * @throws Exception
+     * Creates and returns the sparse vec array based on the index
+     * @param reader the index reader
+     * @return the sparse vec array
+     * @throws Exception IOException from Lucene's getTerms method
      */
     public static Double[][] getSparseVecArray(IndexReader reader) throws Exception {
         Double[][] vecTable = new Double[0][0];
@@ -159,9 +159,9 @@ public class Indexer {
     }
 
     /**
-     *
-     * @param vecTable
-     * @throws IOException
+     * Writes the sparse vec array to a csv file
+     * @param vecTable the table to write to the csv
+     * @throws IOException io exception
      */
     public static void writeSparseVecArrayToCSV(Double[][] vecTable, String file_name) throws IOException {
         try (CSVWriter writer = new CSVWriter(new FileWriter(file_name))) {
@@ -174,6 +174,35 @@ public class Indexer {
                 writer.writeNext(str);
             }
         }
+    }
+
+    /**
+     * Makes the docXterm matrix and extracts it to a CSV file
+     * @param index_directory   the directory of the index
+     * @param csv_name  how to name the CSV file
+     */
+    public static void compileVecDocAndWriteToCSV(String index_directory, String csv_name){
+
+        System.out.println("Writing file to CSV...");
+        long start_time = System.nanoTime();
+
+        try {
+            IndexReader indexReader = DirectoryReader.open(FSDirectory.open(Paths.get(index_directory)));
+
+            Double[][] vector = Indexer.getSparseVecArray(indexReader);
+
+            // write vector index to csv
+            Indexer.writeSparseVecArrayToCSV(vector, csv_name);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        // Time elapsed calculation
+        long end_time = System.nanoTime();
+        long time_elapsed = end_time - start_time;
+        double time_elapsed_converted = (double) time_elapsed / 1_000_000_000.0;
+        System.out.println("Time to write file: " + time_elapsed_converted + " seconds");
     }
 
 }
