@@ -53,9 +53,9 @@ public class Searcher {
     }
 
     /**
-     *  Sorts [DESCENDING] a list of Mydoc lists by the contents (here compares as doubles)
+     *  Sorts [DESCENDING] a list of MyDoc lists by the contents (here compares as doubles)
      * @param similarity_vectors    the MyDoc list
-     * @return  sorted list of Mydoc lists
+     * @return  sorted list of MyDoc lists
      */
     public static List<List<MyDoc>> sort_Similarity_Vectors(List<List<MyDoc>> similarity_vectors) {
         for (int i = 0; i <= similarity_vectors.size() - 1; i++) {

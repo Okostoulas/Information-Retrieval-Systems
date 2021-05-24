@@ -1,5 +1,7 @@
 import model.MyDoc;
 
+import java.io.File;
+import java.io.FileReader;
 import java.util.List;
 
 public class Main {
@@ -20,55 +22,59 @@ public class Main {
         List<MyDoc> queries;
         List<MyDoc> relevance_assessments;
 
-        String similarity_vectors_file = "Results/q_k_similarity_vectors.csv";
+        String similarity_vectors_file = "Results/q_k_similarity_vectors_300.csv";
         List<List<MyDoc>> similarity_vectors;
         /* END OF INITIAL SETUP */
 
-        // Create results directory
-        Parser.createResultsFile(results_directory_name);
+        // mode selection
+        switch (args[0]) {
+            case "index":
+                // Create results directory
+                Parser.createResultsFile(results_directory_name);
 
-        // Data parsing
-        documents = Parser.parse(dataset_file, delimiter);
-        queries = Parser.parse(queries_file, delimiter);
+                // Data parsing
+                documents = Parser.parse(dataset_file, delimiter);
+                queries = Parser.parse(queries_file, delimiter);
 
-        // [SVD] append queries to documents
-        documents.addAll(queries);
-        // [SVD] data parsing
-        relevance_assessments = Parser.parse(relevance_assessments_file, delimiter);
-        Parser.saveRelevanceAssessment(relevance_assessments, q_results_file);
+                // [SVD] index just the documents, in order to make the CSV without the queries
+                System.out.println("Indexing dataset");
+                Indexer.index(index_directory, documents, query_field);
+                Indexer.compileVecDocAndWriteToCSV(index_directory, index_without_queries_filename);
 
-        // Indexing
-        System.out.println("Indexing dataset and queries");
-        Indexer.index(index_directory, documents, query_field);
+                // [SVD] append queries to documents
+                documents.addAll(queries);
 
-        // Reading the Index
-        /*
-        try {
-            IndexReader indexReader = DirectoryReader.open(FSDirectory.open(Paths.get(index_directory)));
-            // print Vector Index
-            Indexer.printIndex(indexReader);
+                // [SVD] data parsing
+                relevance_assessments = Parser.parse(relevance_assessments_file, delimiter);
+                Parser.saveRelevanceAssessment(relevance_assessments, q_results_file);
 
-            Double[][] vector = Indexer.getSparseVecArray(indexReader);
+                // [SVD] index WITH queries this time, in order to get the enriched terms
+                System.out.println("Indexing dataset WITH queries");
+                Indexer.index(index_directory, documents, query_field);
+                Indexer.compileVecDocAndWriteToCSV(index_directory, index_with_queries_filename);
+                break;
+            case "search":
+                // parse given CSV from Python IF EXISTS, otherwise exit
+                File tempFile = new File(similarity_vectors_file);
+                if (tempFile.exists()) {
+                    // parse given CSV with qk similarity vectors
+                    similarity_vectors = Parser.parseSimilarityVectorsCSV(similarity_vectors_file);
+                    // Sort similarity vectors data in descending order
+                    similarity_vectors = Searcher.sort_Similarity_Vectors(similarity_vectors);
 
-            // write vector index to csv
-            Indexer.writeSparseVecArrayToCSV(vector);
-
-        } catch (Exception e) {
-            e.printStackTrace();
+                    // Searching
+                    for (int k : k_results) {
+                        System.out.println("Executing queries and getting top " + k + " documents");
+                        Searcher.executeQueries(index_directory, query_field, similarity_vectors, k);
+                    }
+                } else {
+                    System.out.println("Similarity vectors \"q_k_similarity_vectors.csv\" file does not exist!");
+                    System.out.println("Make sure you have it in the Results folder or Run the Python script to generate it");
+                }
+                break;
+            default:
+                break;
         }
-        */
-
-        // parse given CSV with qk similarity vectors
-        similarity_vectors = Parser.parseSimilarityVectorsCSV(similarity_vectors_file);
-        // Sort similarity vectors data in descending order
-        similarity_vectors = Searcher.sort_Similarity_Vectors(similarity_vectors);
-
-        // Searching
-        for (int k : k_results){
-            System.out.println("Executing queries and getting top " + k + " documents");
-            Searcher.executeQueries(index_directory, query_field, similarity_vectors, k);
-        }
-
 
     }
 

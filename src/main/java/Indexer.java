@@ -111,15 +111,19 @@ public class Indexer {
     /**
      * Prints the index
      * @param reader the index reader for the index
-     * @throws Exception for the iterator
      */
-    public static void printIndex(IndexReader reader) throws IOException {
-        Terms terms = MultiFields.getTerms(reader, "content");
+    public static void printIndex(IndexReader reader) {
+        try {
+            Terms terms = MultiFields.getTerms(reader, "content");
 
-        TermsEnum it = terms.iterator();
-        //iterates through the terms of the lexicon
-        while(it.next() != null) {
-            System.out.println(it.term().utf8ToString()); 		//prints the terms
+            TermsEnum it = terms.iterator();
+            //iterates through the terms of the lexicon
+            while(it.next() != null) {
+                // print the terms
+                System.out.println(it.term().utf8ToString());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
     }
@@ -130,13 +134,14 @@ public class Indexer {
      * @return
      * @throws Exception
      */
-    public static Double[][] getSparseVecArray(IndexReader reader) throws Exception{
+    public static Double[][] getSparseVecArray(IndexReader reader) throws Exception {
         Double[][] vecTable = new Double[0][0];
         Terms fieldTerms = MultiFields.getTerms(reader, "content");
 
         if (fieldTerms != null && fieldTerms.size() != -1) {
             IndexSearcher searcher = new IndexSearcher(reader);
 
+            // return ALL docs via all-encompassing query
             ScoreDoc[] scoreDocs = searcher.search(new MatchAllDocsQuery(), Integer.MAX_VALUE).scoreDocs;
             vecTable = new Double[(int) fieldTerms.size()][scoreDocs.length];
 
@@ -158,8 +163,8 @@ public class Indexer {
      * @param vecTable
      * @throws IOException
      */
-    public static void writeSparseVecArrayToCSV(Double[][] vecTable) throws IOException {
-        try (CSVWriter writer = new CSVWriter(new FileWriter("big_data.csv"))) {
+    public static void writeSparseVecArrayToCSV(Double[][] vecTable, String file_name) throws IOException {
+        try (CSVWriter writer = new CSVWriter(new FileWriter(file_name))) {
             for (Double[] vec : vecTable){
                 int size = vec.length;
                 String[] str = new String[size];
