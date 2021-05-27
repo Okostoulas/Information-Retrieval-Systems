@@ -1,4 +1,5 @@
 import model.MyDoc;
+import org.apache.lucene.search.similarities.*;
 
 import java.util.List;
 
@@ -19,6 +20,14 @@ public class Main {
         List<MyDoc> documents;
         List<MyDoc> queries;
         List<MyDoc> relevance_assessments;
+
+        // BM25
+        float BMk = 0.6F;
+        float BMb = 0.75F;
+
+        // LM
+        float lamda = 1.0F;
+
         /* END OF INITIAL SETUP */
 
         // Create results directory
@@ -32,6 +41,27 @@ public class Main {
         Parser.saveRelevanceAssessment(relevance_assessments, q_results_file);
 
         // Indexing
+        Similarity sim;
+
+        switch (args[0]) {
+            case "bm25":
+                System.out.println("Applying BM25 similarity...");
+                sim = new BM25Similarity(BMk, BMb);
+                break;
+            case "lmdir":
+                System.out.println("Applying Language Model similarity with Dirichlet smoothing...");
+                sim = new LMDirichletSimilarity();
+                break;
+            case "lmjelmer":
+                System.out.println("Applying Language Model similarity with Jelinek Mercer smoothing...");
+                sim = new LMJelinekMercerSimilarity(lamda);
+                break;
+            default:
+                System.out.println("Applying Classic Similarity...");
+                sim = new ClassicSimilarity();
+                break;
+        }
+
         System.out.println("Indexing dataset");
         Indexer.index(index_directory, documents, query_field);
 

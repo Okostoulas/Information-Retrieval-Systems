@@ -6,8 +6,7 @@ import org.apache.lucene.document.Field;
 import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
-import org.apache.lucene.search.similarities.ClassicSimilarity;
-import org.apache.lucene.search.similarities.Similarity;
+import org.apache.lucene.search.similarities.*;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 
@@ -25,8 +24,9 @@ public class Indexer {
      *                        corpus
      * @param myDocs the list of un-indexed documents
      * @param textField [REDUNDANT] the name of the text field used for categorization
+     * @param sim   the similarity model to be used
      */
-    public static void index(String index_directory, List<MyDoc> myDocs, String textField){
+    public static void index(String index_directory, List<MyDoc> myDocs, String textField, Similarity sim){
 
         try {
             long start_time = System.nanoTime();
@@ -35,10 +35,8 @@ public class Indexer {
 
             Analyzer analyzer = new EnglishAnalyzer();
 
-            Similarity similarity = new ClassicSimilarity();
-
             IndexWriterConfig indexWriterConfig = new IndexWriterConfig(analyzer);
-            indexWriterConfig.setSimilarity(similarity);
+            indexWriterConfig.setSimilarity(sim);
             indexWriterConfig.setOpenMode(IndexWriterConfig.OpenMode.CREATE);
 
             IndexWriter indexWriter = new IndexWriter(directory, indexWriterConfig);

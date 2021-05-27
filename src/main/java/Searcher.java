@@ -10,7 +10,7 @@ import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
-import org.apache.lucene.search.similarities.ClassicSimilarity;
+import org.apache.lucene.search.similarities.*;
 import org.apache.lucene.store.FSDirectory;
 
 import java.io.File;
@@ -28,6 +28,7 @@ public class Searcher {
      * @param field the field on which the searcher will search
      * @param queries the list of queries
      * @param k the number of first results
+     * @param sim the similarity model to be used
      */
     public static void executeQueries(String index_directory, String field, List<MyDoc> queries, int k){
 
@@ -36,7 +37,7 @@ public class Searcher {
 
             IndexReader indexReader = DirectoryReader.open(FSDirectory.open(Paths.get(index_directory)));
             IndexSearcher indexSearcher = new IndexSearcher(indexReader);
-            indexSearcher.setSimilarity(new ClassicSimilarity());
+            indexSearcher.setSimilarity(sim);
 
             Analyzer analyzer = new EnglishAnalyzer();
 
