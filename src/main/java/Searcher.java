@@ -30,7 +30,7 @@ public class Searcher {
      * @param k the number of first results
      * @param sim the similarity model to be used
      */
-    public static void executeQueries(String index_directory, String field, List<MyDoc> queries, int k){
+    public static void executeQueries(String index_directory, String field, List<MyDoc> queries, int k, Similarity sim){
 
         try {
             long start_time = System.nanoTime();

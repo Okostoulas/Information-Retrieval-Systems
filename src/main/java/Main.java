@@ -63,12 +63,12 @@ public class Main {
         }
 
         System.out.println("Indexing dataset");
-        Indexer.index(index_directory, documents, query_field);
+        Indexer.index(index_directory, documents, query_field, sim);
 
         // Searching
         for (int k : k_results){
             System.out.println("Executing queries and getting top " + k + " documents");
-            Searcher.executeQueries(index_directory, query_field, queries, k);
+            Searcher.executeQueries(index_directory, query_field, queries, k, sim);
         }
 
 
