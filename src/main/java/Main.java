@@ -1,4 +1,5 @@
 import model.MyDoc;
+import org.nd4j.linalg.api.ops.impl.nlp.SkipGramRound;
 
 import java.util.List;
 
@@ -37,7 +38,7 @@ public class Main {
 
         // Searching
         for (int k : k_results){
-            System.out.println("Executing queries and getting top " + k + " documents");
+            System.out.println("###############\nExecuting queries and getting top " + k + " documents\n###############");
             Searcher.executeQueries(index_directory, query_field, queries, k);
         }
 

@@ -3,6 +3,7 @@ import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.en.EnglishAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
+import org.apache.lucene.document.StoredField;
 import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
@@ -71,8 +72,12 @@ public class Indexer {
         try {
             Document doc = new Document();
 
-            TextField id = new TextField("id", myDoc.getId(), Field.Store.YES);
+            StoredField id = new StoredField("id", myDoc.getId());
             doc.add(id);
+
+            StoredField body = new StoredField("body", myDoc.getContent());
+            doc.add(body);
+
             TextField content = new TextField(textField, myDoc.getContent(), Field.Store.NO);
             doc.add(content);
 
