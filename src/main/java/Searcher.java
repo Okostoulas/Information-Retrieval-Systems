@@ -43,7 +43,7 @@ public class Searcher {
             IndexSearcher indexSearcher = new IndexSearcher(indexReader);
             indexSearcher.setSimilarity(new WordEmbeddingsSimilarity(vec,
                     field,
-                    WordEmbeddingsSimilarity.Smoothing.TF));
+                    WordEmbeddingsSimilarity.Smoothing.MEAN));
 
 
             QueryParser queryParser = new QueryParser(field, analyzer);
