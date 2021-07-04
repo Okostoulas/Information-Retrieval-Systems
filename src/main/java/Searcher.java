@@ -31,7 +31,7 @@ public class Searcher {
      * @param queries the list of queries
      * @param k the number of first results
      */
-    public static void executeQueries(String index_directory, String field, List<MyDoc> queries, int k, Word2Vec vec){
+    public static void executeQueries(String index_directory, String field, List<MyDoc> queries, int k, Word2Vec vec, Analyzer analyzer){
 
         try {
             long start_time = System.nanoTime();
@@ -43,19 +43,8 @@ public class Searcher {
             IndexSearcher indexSearcher = new IndexSearcher(indexReader);
             indexSearcher.setSimilarity(new WordEmbeddingsSimilarity(vec,
                     field,
-                    WordEmbeddingsSimilarity.Smoothing.TF));
+                    WordEmbeddingsSimilarity.Smoothing.MEAN));
 
-            // Create custom analyzer
-            Analyzer analyzer = new Analyzer() {
-                @Override
-                protected TokenStreamComponents createComponents(String field) {
-                    Tokenizer tokenizer = new WhitespaceTokenizer();
-                    double minAcc = 0.95;
-
-                    TokenFilter synFilter = new W2VSynonymFilter(tokenizer, vec, minAcc);
-                    return new TokenStreamComponents(tokenizer, synFilter);
-                }
-            };
 
             QueryParser queryParser = new QueryParser(field, analyzer);
 
@@ -109,5 +98,19 @@ public class Searcher {
                 term = it.next();
             }
         }
+    }
+
+    public static Analyzer createAnalyzer(Word2Vec vec){
+        // Create custom analyzer
+        return new Analyzer() {
+            @Override
+            protected TokenStreamComponents createComponents(String field) {
+                Tokenizer tokenizer = new WhitespaceTokenizer();
+                double minAcc = 0.95;
+
+                TokenFilter synFilter = new W2VSynonymFilter(tokenizer, vec, minAcc);
+                return new TokenStreamComponents(tokenizer, synFilter);
+            }
+        };
     }
 }
