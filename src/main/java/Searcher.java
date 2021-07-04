@@ -48,9 +48,6 @@ public class Searcher {
 
             //printIndex(indexReader);
 
-            IndexSearcher indexSearcher = new IndexSearcher(indexReader);
-            indexSearcher.setSimilarity(new BM25Similarity());
-
             FieldValuesSentenceIterator iterator = new FieldValuesSentenceIterator(indexReader, "body");
 
             //TODO: Move this in a separate method
@@ -63,6 +60,12 @@ public class Searcher {
                     .build();
 
             vec.fit();
+
+            IndexSearcher indexSearcher = new IndexSearcher(indexReader);
+            indexSearcher.setSimilarity(new WordEmbeddingsSimilarity(vec,
+                    "body",
+                    WordEmbeddingsSimilarity.Smoothing.TF));
+
 
             //Analyzer analyzer = new EnglishAnalyzer();
 
