@@ -14,7 +14,6 @@ public class Main {
         String relevance_assessments_file = "Dataset/rlv-ass";
         String results_directory_name = "Results";
         String index_directory = "./index";
-        String query_field = "content";
         String q_results_file = "Results/qrels.txt";
         int[] k_results = {5, 10, 15, 20, 30, 50};
         List<MyDoc> documents;
@@ -34,12 +33,12 @@ public class Main {
 
         // Indexing
         System.out.println("Indexing dataset");
-        Indexer.index(index_directory, documents, query_field);
+        Indexer.index(index_directory, documents);
 
         // Searching
         for (int k : k_results){
             System.out.println("###############\nExecuting queries and getting top " + k + " documents\n###############");
-            Searcher.executeQueries(index_directory, query_field, queries, k);
+            Searcher.executeQueries(index_directory, "body", queries, k, vec);
         }
 
 

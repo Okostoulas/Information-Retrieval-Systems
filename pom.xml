@@ -68,11 +68,11 @@
             <version>${dl4j.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>org.apache.lucene</groupId>
-            <artifactId>lucene-test-framework</artifactId>
-            <version>7.2.0</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.apache.lucene</groupId>-->
+<!--            <artifactId>lucene-test-framework</artifactId>-->
+<!--            <version>7.7.1</version>-->
+<!--        </dependency>-->
 
         <dependency>
             <groupId>org.deeplearning4j</groupId>
@@ -93,11 +93,11 @@
             <version>4.3.6</version>
         </dependency>
 
-        <dependency>
-            <groupId>org.apache.lucene</groupId>
-            <artifactId>lucene-analyzers-common</artifactId>
-            <version>7.2.0</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.apache.lucene</groupId>-->
+<!--            <artifactId>lucene-analyzers-common</artifactId>-->
+<!--            <version>7.7.1</version>-->
+<!--        </dependency>-->
 
         <dependency>
             <groupId>org.apache.lucene</groupId>

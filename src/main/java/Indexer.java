@@ -1,10 +1,8 @@
 import model.MyDoc;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.en.EnglishAnalyzer;
-import org.apache.lucene.document.Document;
-import org.apache.lucene.document.Field;
-import org.apache.lucene.document.StoredField;
-import org.apache.lucene.document.TextField;
+import org.apache.lucene.document.*;
+import org.apache.lucene.index.IndexOptions;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.search.similarities.ClassicSimilarity;
@@ -12,9 +10,7 @@ import org.apache.lucene.search.similarities.Similarity;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 
@@ -27,7 +23,7 @@ public class Indexer {
      * @param myDocs the list of un-indexed documents
      * @param textField [REDUNDANT] the name of the text field used for categorization
      */
-    public static void index(String index_directory, List<MyDoc> myDocs, String textField){
+    public static void index(String index_directory, List<MyDoc> myDocs){
 
         try {
             long start_time = System.nanoTime();
@@ -45,7 +41,7 @@ public class Indexer {
             IndexWriter indexWriter = new IndexWriter(directory, indexWriterConfig);
 
             for (MyDoc myDoc : myDocs) {
-                indexDoc(indexWriter, myDoc, textField);
+                indexDoc(indexWriter, myDoc);
             }
             // CLOSE YO index writers!
             indexWriter.close();
@@ -65,9 +61,8 @@ public class Indexer {
      * Creates a document and adds it in the index
      * @param indexWriter the index writer used
      * @param myDoc the document that gets added to the index
-     * @param textField specifies which text field to name and use
      */
-    private static void indexDoc(IndexWriter indexWriter, MyDoc myDoc, String textField){
+    private static void indexDoc(IndexWriter indexWriter, MyDoc myDoc){
 
         try {
             Document doc = new Document();
@@ -75,11 +70,23 @@ public class Indexer {
             StoredField id = new StoredField("id", myDoc.getId());
             doc.add(id);
 
-            StoredField body = new StoredField("body", myDoc.getContent());
+            //StoredField body = new StoredField("body", myDoc.getContent());
+            //doc.add(body);
+
+            FieldType type = new FieldType(TextField.TYPE_STORED);
+            type.setIndexOptions(IndexOptions.DOCS_AND_FREQS_AND_POSITIONS_AND_OFFSETS);
+            type.setTokenized(true);
+            type.setStored(true);
+            type.setStoreTermVectors(true);
+            type.setStoreTermVectorOffsets(true);
+            type.setStoreTermVectorPositions(true);
+
+            Field body = new Field("body", myDoc.getContent(), type);
             doc.add(body);
 
-            TextField content = new TextField(textField, myDoc.getContent(), Field.Store.NO);
-            doc.add(content);
+//            TextField content = new TextField(textField, myDoc.getContent(), Field.Store.NO);
+//            doc.add(content);
+
 
             if (indexWriter.getConfig().getOpenMode() == IndexWriterConfig.OpenMode.CREATE) {
                 indexWriter.addDocument(doc);
