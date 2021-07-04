@@ -1,4 +1,5 @@
 import model.MyDoc;
+import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
@@ -23,10 +24,12 @@ public class Main {
         String results_directory_name = "Results";
         String index_directory = "./index";
         String q_results_file = "Results/qrels.txt";
+        String nn_model = "Dataset/model.txt";
         int[] k_results = {5, 10, 15, 20, 30, 50};
         List<MyDoc> documents;
         List<MyDoc> queries;
         List<MyDoc> relevance_assessments;
+        Word2Vec vec = new Word2Vec();
         /* END OF INITIAL SETUP */
 
         // Create results directory
@@ -53,20 +56,45 @@ public class Main {
 
         FieldValuesSentenceIterator iterator = new FieldValuesSentenceIterator(indexReader, "body");
 
-        Word2Vec vec = new Word2Vec.Builder()
-                .layerSize(100)
-                .windowSize(3)
-                .elementsLearningAlgorithm(new CBOW<>())
-                .tokenizerFactory(new LuceneTokenizerFactory(new StandardAnalyzer()))
-                .iterate(iterator)
-                .build();
+        // Config Switch mode
+        switch (args[0]){
+            case "fit":
+                System.out.println("Running fit model");
+                vec = new Word2Vec.Builder()
+                        .layerSize(100)
+                        .windowSize(3)
+                        .elementsLearningAlgorithm(new CBOW<>())
+                        .tokenizerFactory(new LuceneTokenizerFactory(new StandardAnalyzer()))
+                        .iterate(iterator)
+                        .build();
 
-        vec.fit();
+                vec.fit();
+                break;
+            case "wikipedia":
+                System.out.println("Running wikipedia model");
+                vec = WordVectorSerializer.readWord2VecModel(nn_model);
+                break;
+            default:
+                System.out.println("No arguments were given, running fit model.");
+                vec = new Word2Vec.Builder()
+                        .layerSize(100)
+                        .windowSize(3)
+                        .elementsLearningAlgorithm(new CBOW<>())
+                        .tokenizerFactory(new LuceneTokenizerFactory(new StandardAnalyzer()))
+                        .iterate(iterator)
+                        .build();
+
+                vec.fit();
+                break;
+        }
+
 
         // Searching
         for (int k : k_results){
             System.out.println("###############\nExecuting queries and getting top " + k + " documents\n###############");
-            Searcher.executeQueries(index_directory, "body", queries, k, vec);
+            // create analyzer once
+            Analyzer analyzer = Searcher.createAnalyzer(vec);
+            Searcher.executeQueries(index_directory, "body", queries, k, vec, analyzer);
         }
 
 
